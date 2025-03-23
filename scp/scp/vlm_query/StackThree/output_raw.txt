@@ -1,0 +1,50 @@
+```python
+# The task involves stacking two cubes on top of each other, which requires four stages:
+# 1. Grasp the red cube.
+# 2. Drop the red cube on top of the green cube.
+# 3. Grasp the blue cube.
+# 4. Drop the blue cube on top of the red cube.
+
+num_stages = 4
+
+### stage 1 sub-goal constraints
+def stage1_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the red cube (keypoint 0)."""
+    return np.linalg.norm(end_effector - keypoints[0])
+
+### stage 1 path constraints
+# No path constraints for grasping stage
+
+### stage 2 sub-goal constraints
+def stage2_subgoal_constraint1(end_effector, keypoints):
+    """The red cube (keypoint 0) is 10cm on top of the green cube (keypoint 4)."""
+    offsetted_point = keypoints[4] + np.array([0, 0, 0.1])
+    return np.linalg.norm(keypoints[0] - offsetted_point)
+
+### stage 2 path constraints
+def stage2_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the red cube (keypoint 0)."""
+    return get_grasping_cost_by_keypoint_idx(0)
+
+### stage 3 sub-goal constraints
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the blue cube (keypoint 1)."""
+    return np.linalg.norm(end_effector - keypoints[1])
+
+### stage 3 path constraints
+# No path constraints for grasping stage
+
+### stage 4 sub-goal constraints
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """The blue cube (keypoint 1) is 10cm on top of the red cube (keypoint 0)."""
+    offsetted_point = keypoints[0] + np.array([0, 0, 0.1])
+    return np.linalg.norm(keypoints[1] - offsetted_point)
+
+### stage 4 path constraints
+def stage4_path_constraint1(end_effector, keypoints):
+    """The robot must still be grasping the blue cube (keypoint 1)."""
+    return get_grasping_cost_by_keypoint_idx(1)
+
+grasp_keypoints = [0, -1, 1, -1]
+release_keypoints = [-1, 0, -1, 1]
+```

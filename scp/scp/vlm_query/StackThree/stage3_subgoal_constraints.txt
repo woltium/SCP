@@ -1,0 +1,4 @@
+def stage3_subgoal_constraint1(end_effector, keypoints):
+    """Align the end-effector with the blue cube (keypoint 1)."""
+    return np.linalg.norm(end_effector - keypoints[1])
+

@@ -1,0 +1,8 @@
+numpy>=1.13.3
+h5py
+tqdm
+imageio
+imageio-ffmpeg
+gdown
+chardet
+huggingface_hub

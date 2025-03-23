@@ -1,0 +1,5 @@
+def stage4_subgoal_constraint1(end_effector, keypoints):
+    """The blue cube (keypoint 1) is 10cm on top of the red cube (keypoint 0)."""
+    offsetted_point = keypoints[0] + np.array([0, 0, 0.1])
+    return np.linalg.norm(keypoints[1] - offsetted_point)
+

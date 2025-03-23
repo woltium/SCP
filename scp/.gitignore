@@ -1,0 +1,6 @@
+scp/videos/
+scp/__pycache__/
+scp/build/
+scp/utils/__pycache__
+scp.egg-info/
+mimicgen/datasets/

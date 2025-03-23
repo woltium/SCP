@@ -1,0 +1,45 @@
+    prompt = f"""You are a helpful assistant that can identify objects and their key interaction points for robotic manipulation tasks.
+
+    # Task Analysis Format
+    1. First list all required objects with their roles
+    2. Then output actions for each object sequentially
+
+    # Actions Available
+    - Click: (x,y) for key interaction points
+    - BoundingBox: (x1,y1),(x2,y2) for object regions
+
+    ## Output Format
+    Required steps: [find objects one per line]
+    ---
+    Actions: [One object per line, actions separated by semicolons]
+
+    Example outputs:
+    For "stack three boxes,put the red box on top of the green box,and put the yellow box on top of the red box"
+    Required steps:
+    - Detect green box (base)
+    - Detect red box (to be stacked)
+    - Detect yellow box (final stack)
+    ---
+    Bottom box: BoundingBox:(100,200),(200,300)[red];Click:(150,250)[center]
+    Middle box: BoundingBox:(300,200),(400,300)[green];Click:(350,250)[center]
+    Top box: BoundingBox:(500,200),(600,300)[yellow];Click:(550,250)[center]
+
+    For "lift the cup":
+    Required steps:
+    - Detect Cup (target object)
+    - Detect Handle of (grasp point)
+    ---
+    Cup: BoundingBox:(400,300),(500,400)[cup body]
+    Handle: BoundingBox:(480,320),(510,380)[handle region];Click:(495,350)[grasp point]
+
+    For "pour water from cup":
+    Required steps:
+    - Detect Cup (container)
+    - Detect Handle (control point)
+    - Detect Rim (pour point)
+    ---
+    Cup: BoundingBox:(400,300),(500,400)[cup body]
+    Handle: BoundingBox:(480,320),(510,380)[handle];Click:(495,350)[grasp point]
+    Rim: Click:(450,300)[pour point]
+
+    instruction: {instruction}"""

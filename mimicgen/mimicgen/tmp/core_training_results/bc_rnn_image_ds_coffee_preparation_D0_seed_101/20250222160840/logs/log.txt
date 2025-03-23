@@ -1,0 +1,17 @@
+
+============= Initialized Observation Utils with Obs Spec =============
+
+using obs modality: low_dim with keys: ['robot0_eef_quat', 'robot0_eef_pos', 'robot0_gripper_qpos']
+using obs modality: rgb with keys: ['agentview_image', 'robot0_eye_in_hand_image']
+using obs modality: depth with keys: []
+using obs modality: scan with keys: []
+run failed with error:
+Dataset at provided path /home/wangws/code/robokep/mimicgen/mimicgen/tmp/core_datasets/coffee_preparation/demo_src_coffee_preparation_task_D0/final/demo.hdf5 not found!
+
+Traceback (most recent call last):
+  File "/home/wangws/code/robokep/robomimic/robomimic/scripts/train.py", line 377, in main
+    train(config, device=device)
+  File "/home/wangws/code/robokep/robomimic/robomimic/scripts/train.py", line 73, in train
+    raise Exception("Dataset at provided path {} not found!".format(dataset_path))
+Exception: Dataset at provided path /home/wangws/code/robokep/mimicgen/mimicgen/tmp/core_datasets/coffee_preparation/demo_src_coffee_preparation_task_D0/final/demo.hdf5 not found!
+

@@ -1,0 +1,144 @@
+device: &device 'cuda:0'
+seed: &seed 0
+
+main:
+  interpolate_pos_step_size: &interpolate_pos_step_size 0.05  # controls the density of the final returned path
+  interpolate_rot_step_size: &interpolate_rot_step_size 0.34  # about 20 degrees
+  grasp_depth: 0.05
+  gripper_length: 0.05
+  constraint_tolerance: 0.13  # for backtracking
+  bounds_min: &bounds_min [-0.4, -0.4, 0.8]
+  bounds_max: &bounds_max [0.4, 0.4, 1]
+  sdf_voxel_size: 0.005
+  vlm_camera: &vlm_camera topdownview
+  obs_camera: &obs_camera frontview
+  action_steps_per_iter: 10
+  seed: *seed
+
+env: 
+  video_cache_size: 2000
+  og_sim:
+    physics_frequency: 100
+    action_frequency: 15
+    
+  scene:
+    name: Rs_int
+    type: InteractiveTraversableScene
+    scene_model: Rs_int
+    interactive_objects: 
+      - hammer
+  bounds_min: *bounds_min
+  bounds_max: *bounds_max
+  interpolate_pos_step_size: *interpolate_pos_step_size
+  interpolate_rot_step_size: *interpolate_rot_step_size
+
+  robot:
+    name: Aloha
+    type: Aloha_dualarm
+    left_arm: 
+      site_name: left/gripper
+      base_link: left/base_link
+      joint_names:
+        - left/waist
+        - left/shoulder
+        - left/elbow
+        - left/forearm_roll
+        - left/wrist_angle
+        - left/wrist_rotate
+    right_arm:
+      site_name: left/gripper
+      base_link: right/base_link
+      joint_names: 
+        - right/waist
+        - right/shoulder
+        - right/elbow
+        - right/forearm_roll
+        - right/wrist_angle
+        - right/wrist_rotate
+  panda:
+    name: panda
+    type: singlearm
+    left_arm: 
+      base_link: base
+      joint_names:
+        - joint1
+        - joint2
+        - joint3
+        - joint4
+        - joint5
+        - joint6
+        - joint7
+  camera:
+    # recorder 
+    1:
+      name: cam_1
+      position: [ 0.6137,  0.4764,  1.4565]
+      orientation: [ 0.3212,  0.4682,  0.6788,  0.4656]
+      resolution: 480
+
+    # vlm camera
+    0:
+      name: cam_0
+      position: [-0.1655,  0.0167,  1.3664]
+      orientation: [ 0.0550,  0.0544,  0.7010,  0.7090]
+      resolution: 480
+      height: 512
+      width: 512
+
+path_solver:
+  opt_pos_step_size: 0.20  # controls the density of control points in the path
+  opt_rot_step_size: 0.78  # controls the density of control points in the path
+  opt_interpolate_pos_step_size: 0.02  # controls the density of collision checking inside optimization
+  opt_interpolate_rot_step_size: 0.10
+  max_collision_points: 60 #60
+  sampling_maxfun: 5000 #5000
+  bounds_min: *bounds_min
+  bounds_max: *bounds_max
+  constraint_tolerance: 0.001
+  minimizer_options:
+    maxiter: 200 #200
+
+subgoal_solver:
+  bounds_min: *bounds_min
+  bounds_max: *bounds_max
+  sampling_maxfun: 5000
+  max_collision_points: 60
+  constraint_tolerance: 0.0001
+  minimizer_options:
+    maxiter: 200
+
+keypoint_proposer:
+  num_candidates_per_mask: 5
+  min_dist_bt_keypoints: 0.05
+  max_mask_ratio: 0.5
+  device: *device
+  bounds_min: *bounds_min
+  bounds_max: *bounds_max
+  seed: *seed
+  feature_type: "dino"
+
+constraint_generator:
+  #model: chatgpt-4o-latest
+  model: gpt-4o-2024-11-20
+  #model: yi-vision 
+  YI_API_BASE: https://api.lingyiwanwu.com/v1
+  API_BASE: https://vip.apiyi.com/v1
+  API_KEY: your_api_key
+  temperature: 0.0
+  max_tokens: 2048
+
+visualizer:
+  bounds_min: *bounds_min
+  bounds_max: *bounds_max
+  vlm_camera: *vlm_camera
+
+task_descriptions:
+  Lift:
+    description: "lift the red cube and lift it straight up vertically"
+    env: Lift
+  Stack:
+    description: "stack the red cube on top of the green cube"
+    env: Stack
+  StackThree:
+    description: "stack the red cube on top of the green cube,and stack the blue cube on top of the red cube"
+    env: StackThree
